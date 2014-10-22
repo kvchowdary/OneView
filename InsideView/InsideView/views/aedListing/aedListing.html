@@ -1,0 +1,37 @@
+﻿<div data-theme="d" data-content-theme="d">
+    {if data.length == 0}
+    <p class="modelTxt">
+        No AEDs data found.
+    </p>
+    {else}
+    {var index = -1} 
+    {for aed in data} 
+    {eval}index++;{/eval}
+    <div data-role="collapsible" data-theme="d" data-content-theme="d" data-collapsed="{if index > 0}true{/if}"
+         data-expanded-icon="arrow-d" data-collapsed-icon="arrow-r" data-filter="true" data-filter-theme="b">
+        <h3>
+            <span style="color:{if (aed.BatteryExpiryDate < new Date() && aed.BatteryExpiryDate.clearTime() > new Date("01/01/2001")) || (aed.AdultElectrodeExpiry < new Date() && aed.AdultElectrodeExpiry.clearTime() > new Date("01/01/2001")) || (aed.ChildElectrodeExpiry < new Date() && aed.ChildElectrodeExpiry.clearTime() > new Date("01/01/2001"))}red{/if}">
+                Serial # ${aed.Serial}</span>
+        </h3>
+        <div> 
+           <img src="${aed.AEDModelURL}" alt="mm1" style="float: right; padding: 5px;" />             
+             {if aed.CustomAEDName!=null }        
+            <p>Name: <span>${aed.CustomAEDName}</span></p>
+            {else}
+            <p><span class="AedLocation">${aed.Location}</span></p>
+            {/if}
+           <p>AED Model: <strong>${aed.ModelAED.Name.replace('(Please note in comments)','')}</strong></p>
+            <p class="AedBatterExpiry">
+                Battery Expiry:{if aed.BatteryExpiryDate.clearTime() <= new Date("01/01/2001")} <b>NA</b> {else} <span><strong style="color:{if aed.BatteryExpiryDate < new Date()}red{/if}">
+                                          ${aed.BatteryExpiryDate|shortDateUSWithOutDaySuffix}</strong></span>{/if}</p>
+            <p class="AedPadExpiry">
+                Adult Pad Expiry:{if aed.AdultElectrodeExpiry.clearTime() <= new Date("01/01/2001")} <b>NA</b> {else} <span><strong style="color:{if aed.AdultElectrodeExpiry < new Date()}red{/if}">
+                                            ${aed.AdultElectrodeExpiry|shortDateUSWithOutDaySuffix}</strong></span>{/if}</p>
+            <p class="AedPadExpiry">
+                Child Pad Expiry:{if aed.ChildElectrodeExpiry.clearTime() <= new Date("01/01/2001")} <b>NA</b> {else} <span><strong style="color:{if aed.ChildElectrodeExpiry < new Date()}red{/if}">
+                                            ${aed.ChildElectrodeExpiry|shortDateUSWithOutDaySuffix}</strong></span>{/if}</p>
+        </div>
+    </div>
+    {/for} 
+    {/if}
+</div>

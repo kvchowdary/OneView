@@ -1,0 +1,36 @@
+﻿<div id="Grid" class="ui-grid-a trainedGrid">
+    
+    {if data.length > 0}
+    
+    <div class="ui-block-a uiBlockHead">
+        <h3>
+            Name
+        </h3>
+    </div>
+    <div class="ui-block-b uiBlockHead">
+        <h3>
+            Expiry Date</h3>
+    </div>
+    {/if}
+    {var index = -1} {for tr in data} {eval}index++;{/eval}
+    <!-- <div class="dataRow {if index%2==1} alt{/if}" > -->
+    <div class="ui-block-a dataRow {if index%2==1} alt{/if}">
+        <div>
+            <p>
+                <span style="font-size: small;">${tr.Name}</span></p>
+        </div>
+    </div>
+    <div class="ui-block-b dataRow {if index%2==1} alt{/if}">
+        <div>
+            <p>
+              {if tr.ExpiryDate.clearTime() <= new Date("01/01/2001")} NA {else}  <span style="font-size: small; color: {if tr.ExpiryDate < new Date()}red{/if}">${tr.ExpiryDate|shortDateUSWithOutDaySuffix}</span>{/if}</p>
+        </div>
+    </div>
+    {/for} 
+    {if data.length == 0}
+
+    <p class="modelTxt">
+        No trained responder data found.
+    </p>
+    {/if}
+</div>

@@ -1,0 +1,591 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1" />
+    <title>Inside View</title>
+    <link rel="stylesheet" href="Content/jquery.mobile-1.4.2.css" />
+    <link rel="stylesheet" href="Content/jquery.mobile.theme-1.4.2.min.css" />
+    <link rel="stylesheet" href="css/mm.css" />
+    <script type="text/javascript" src="scripts/jquery-1.8.0.min.js"></script>
+   
+    <script src="scripts/templateManager/trimpathTemplate.js" type="text/javascript"></script>
+    <script src="scripts/templateManager/templateManager.js" type="text/javascript"></script>
+    <script src="scripts/nameSpaces.js" type="text/javascript"></script>
+    <!-- Model scripts -->
+    <script src="model/common.js" type="text/javascript"></script>
+    <script src="model/service.js" type="text/javascript"></script>
+    <!-- View scripts -->
+    <script src="views/messageCenter/messageCenter.js" type="text/javascript"></script>
+    <script src="views/aedListing/aedListing.js" type="text/javascript"></script>
+    <script src="views/trListing/trListing.js" type="text/javascript"></script>
+    <script src="views/feedback/feedback.js" type="text/javascript"></script>
+    <script src="views/aedMaintenance/aedMaintenance.js" type="text/javascript"></script>
+    <script src="views/help/help.js" type="text/javascript"></script>
+    <!-- Page scripts -->
+    <script src="page/main.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).bind("mobileinit", function () {
+            // Make your jQuery Mobile framework configuration changes here!
+            $.mobile.allowCrossDomainPages = true;
+            $.support.cors = true;
+            $.mobile.defaultDialogTransition = "none";
+            $.mobile.defaultPageTransition = "none";
+            $.mobile.phonegapNavigationEnabled = true;
+            $.mobile.transitionFallbacks.slide = "none";
+            $.mobile.transitionFallbacks.slidedown = "none";
+            $.mobile.transitionFallbacks.slide = "none";
+            $.mobile.transitionFallbacks.slidein = "none";
+            $.mobile.transitionFallbacks.slideout = "none";
+            $.mobile.transitionFallbacks.pop = 'none';
+        });
+
+    </script>
+    <script type="text/javascript" src="scripts/jquery.mobile-1.4.2.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript">
+        var isOnline = true;
+        var latitude;
+        var longitude;
+        function onDeviceReady() {
+            // Now safe to use the PhoneGap API
+            document.addEventListener("backbutton", onBackKeyDown, false);
+            document.addEventListener("offline", onOffline, false);
+            document.addEventListener("online", onOnline, false);
+            document.addEventListener("resume", onResume, false);
+            document.addEventListener("pause", onPause, false);
+            GetDeviceInformation();
+
+        }
+        document.addEventListener("deviceready", function () { onDeviceReady(); }, false);
+
+        function onBackKeyDown() {
+            if ($.mobile.activePage.attr('id') == 'pgHome' || $.mobile.activePage.attr('id') == 'pgLogin') {
+                navigator.app.exitApp();
+            }
+            else {
+                navigator.app.backHistory();
+            }
+        }
+
+        // Handle the offline event
+        function onOffline() {
+            isOnline = false;
+        }
+        function onOnline() {
+            isOnline = true;
+        }
+        function onPause() {
+            startPauseTime = new Date();
+        }
+        var startPauseTime;
+        function onResume() {
+            // Handle the resume event
+            GetDeviceInformation();
+            var endPauseTime = new Date();
+            var totalDuration = (parseInt(endPauseTime - startPauseTime) / 1000);
+            if (totalDuration >= 3600) {
+                var customerData = scriptsON.parse(localStorage.getItem("customerData"));
+                if (customerData != null) {
+                    alert("Session expired please login again.", null, "Inside View", "Ok");
+                    localStorage.removeItem("username");
+                    localStorage.removeItem("password");
+                    localStorage.removeItem("customerData");
+                    $("#txtUserName").val("");
+                    $("#txtPassword").val("");
+                    $.mobile.changePage("#pgLogin");
+                }
+            }
+        }
+
+        function GetCurrentLocation() {
+            // onSuccess Callback
+            // This method accepts a Position object, which contains the
+            // current GPS coordinates
+            //
+            var onSuccess = function (position) {
+                geoCurrentLocationAddress(position.coords.latitude, position.coords.longitude);
+            };
+
+            // onError Callback receives a PositionError object
+            //
+            function onError(error) {
+                alert('code: ' + error.code + '\n' +
+          'message: ' + error.message + '\n');
+            }
+
+            navigator.geolocation.getCurrentPosition(onSuccess, onError, { enableHighAccuracy: true });
+        }
+
+        function GetDeviceInformation() {
+            $('#hiddenLoginUserPhoneUDID').val(device.uuid);
+            $('#hiddenLoginUserPhoneVersion').val(device.version);
+            var deviceName = device.name != null ? device.name : device.model;
+            $('#hiddenLoginUserPhoneDeviceName').val(deviceName);
+        }
+       
+       
+    </script>
+</head>
+<body>
+    <!-- Login -->
+    <div data-role="page" id="pgLogin" class="loginPlace" data-dom-cache="true">
+        <div style="text-align: center">
+            <img alt="logo" style="height: 68px" src="images/logo.png" />
+        </div>
+        <div data-role="content">
+            <div style="vertical-align: middle">
+                <div data-role="fieldcontain">
+                    <label for="txtUserName">
+                        Username
+                    </label>
+                    <input type="email" name="name" id="txtUserName" placeholder="Username" value="" />
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="txtPassword">
+                        Password
+                    </label>
+                    <input type="password" name="name" placeholder="password" id="txtPassword" value="" />
+                </div>
+                <a id="btnLogin" data-role="button" href="javascript:;">Login </a>
+                <div>
+                    <p style="text-align: center;" data-mce-style="text-align: center;">
+                        <span class="footerTxt"><span data-mce-bogus="1" id="_mce_caret"><span data-mce-bogus="1">
+                        </span></span>©
+                            <script>                                document.write(new Date().getFullYear());</script>
+                            Alliance Global Services. All Rights Reserved. </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Home -->
+    <div data-role="page" id="pgHome" class="homeArea" data-dom-cache="true">
+        <div class="homeLogoArea">
+            <div style="text-align: center" class="logoContainer">
+                <img alt="AGS" style="height: 50px" src="images/logo.png">
+            </div>
+        </div>
+        <div class="welcomeTxt">
+            Welcome
+            <label>
+            </label>
+        </div>
+        <div data-role="content">
+            <div class="homePlace">
+                <h3 class="customerTitle">
+                </h3>
+                <ul data-role="listview" data-divider-theme="d" data-inset="true">
+                    <li data-theme="d"><a href="javascript:;" class="btnMessageCenter" id="btnMessageCenter">
+                        <span class="menuIcon messageIcon"></span>Message Center </a></li>
+                    <li data-theme="d"><a href="javascript:;" class="btnTrainedResponders" id="btnTrainedResponders">
+                        <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
+                    <li data-theme="d"><a href="javascript:;" class="btnAEDs" id="btnAEDs"><span class="menuIcon aedIcon">
+                    </span>AEDs </a></li>
+                    <li data-theme="d"><a href="javascript:;" class="btnMaintenance" id="btnMaintenance">
+                        <span class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
+                    <li data-theme="d"><a href="javascript:;" class="btnFeedback" id="btnFeedback"><span
+                        class="menuIcon feedbackIcon"></span>Feedback </a></li>
+                    <li data-theme="d"><a href="javascript:;" class="btnHelp" id="btnHelp"><span class="menuIcon helpIcon">
+                    </span>Help </a></li>
+                    <li data-theme="d"><a href="javascript:;" class="btnLogout" id="btnLogout"><span
+                        class="menuIcon logoutIcon"></span>Logout </a></li>
+                </ul>
+                <div class="clear">
+                </div>
+                <div>
+                    <div style="text-align: center;" data-mce-style="text-align: center;">
+                        <span class="footerTxt"><span data-mce-bogus="1" id="Span1"><span data-mce-bogus="1">
+                        </span></span>©
+                            <script>                                document.write(new Date().getFullYear());</script>
+                            CR<sup>2</sup>, LLC dba AGS. All Rights Reserved. </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+    <!-- Message Center -->
+    <div data-role="page" id="pgMessageCenter">
+        <div data-theme="d" data-role="header" data-position="fixed">
+            <a data-role="button" data-direction="reverse" data-rel="back" data-theme="d" data-icon="back"
+                data-iconpos="left">Back </a><a data-rel="popup" data-position-to="window" data-role="button"
+                    href="#messageMenuPopup" data-icon="gear">Menu </a>
+            <h3>
+                Message Center
+            </h3>
+        </div>
+        <div id="divMsgCentercontainer" data-role="content">
+        </div>
+        <!-- NavigationMenuPopup -->
+        <div data-role="popup" id="messageMenuPopup" class="navigationMenuPopup" data-corners="true"
+            data-theme="none" data-shadow="false">
+            <span class="MenuArrowTop"></span>
+            <ul data-role="listview" data-divider-theme="b" data-inset="true">
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
+                    class="menuIcon homeIcon"></span>Home </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
+                    class="menuIcon messageIcon"></span>Message Center </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
+                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
+                    class="menuIcon aedIcon"></span>AEDs </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
+                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
+                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
+                    class="menuIcon helpIcon"></span>Help </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
+                    class="menuIcon logoutIcon"></span>Logout </a></li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <!-- NavigationMenuPopup Div end here -->
+    </div>
+    <!-- Trained Responders -->
+    <div data-role="page" id="pgTR" class="trainedResponderArea">
+        <div data-theme="d" data-role="header" data-position="fixed">
+            <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
+                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#trainedMenuPopup"
+                    data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
+            <h3>
+                Trained Responders
+            </h3>
+        </div>
+        <!-- header div end here -->
+        <div data-role="content">
+            <div id="divTRListContainer">
+                <!-- Trained Responders Placeholder -->
+            </div>
+        </div>
+        <!-- NavigationMenuPopup -->
+        <div data-role="popup" id="trainedMenuPopup" class="navigationMenuPopup" data-corners="true"
+            data-theme="none" data-shadow="false" data-tolerance="0,0">
+            <span class="MenuArrowTop"></span>
+            <ul data-role="listview" data-divider-theme="b" data-inset="true">
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
+                    class="menuIcon homeIcon"></span>Home </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
+                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
+                    class="menuIcon trainedIcon"></span>Trained Responders </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
+                    class="menuIcon aedIcon"></span>AEDs </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
+                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
+                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
+                    class="menuIcon helpIcon"></span>Help </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
+                    class="menuIcon logoutIcon"></span>Logout </a></li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <!-- NavigationMenuPopup Div end here -->
+    </div>
+    <!-- Active AEDs -->
+    <div data-role="page" id="pgAED">
+        <div data-theme="d" data-role="header" data-position="fixed">
+            <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
+                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#aedMenuPopup"
+                    data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
+            <h3>
+                AEDs
+            </h3>
+        </div>
+        <!-- header div end here -->
+        <div data-role="content" id="divAEDListingContainer">
+            <!-- Placeholder for AED Listing Content -->
+        </div>
+        <!-- NavigationMenuPopup -->
+        <div data-role="popup" id="aedMenuPopup" class="navigationMenuPopup" data-corners="true"
+            data-theme="none" data-shadow="false" data-tolerance="0,0">
+            <span class="MenuArrowTop"></span>
+            <ul data-role="listview" data-divider-theme="b" data-inset="true">
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
+                    class="menuIcon homeIcon"></span>Home </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
+                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
+                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
+                    class="menuIcon aedIcon"></span>AEDs </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
+                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
+                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
+                    class="menuIcon helpIcon"></span>Help </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
+                    class="menuIcon logoutIcon"></span>Logout </a></li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <!-- NavigationMenuPopup Div end here -->
+    </div>
+    <!-- AED Maintenance -->
+    <div data-role="page" id="pgAM">
+        <div data-theme="d" data-role="header" data-position="fixed">
+            <h3>
+                AED Maintenance
+            </h3>
+            <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
+                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#maintenanceMenuPopup"
+                    data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
+        </div>
+        <!-- header div end here -->
+        <div id="divAEDMaintenanceContainer">
+        </div>
+        <!-- NavigationMenuPopup -->
+        <div data-role="popup" id="maintenanceMenuPopup" class="navigationMenuPopup" data-corners="true"
+            data-theme="none" data-shadow="false" data-tolerance="0,0">
+            <span class="MenuArrowTop"></span>
+            <ul data-role="listview" data-divider-theme="b" data-inset="true">
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
+                    class="menuIcon homeIcon"></span>Home </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
+                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
+                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
+                    class="menuIcon aedIcon"></span>AEDs </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
+                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
+                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
+                    class="menuIcon helpIcon"></span>Help </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
+                    class="menuIcon logoutIcon"></span>Logout </a></li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <!-- NavigationMenuPopup Div end here -->
+    </div>
+    <!-- Feedback -->
+    <div data-role="page" id="pgFeedback">
+        <div data-theme="d" data-role="header" data-position="fixed">
+            <h3>
+                Feedback
+            </h3>
+            <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
+                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#feedbackMenuPopup"
+                    data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
+        </div>
+        <!-- header div end here -->
+        <div data-role="content" id="divFeedbackContainer">
+            <!-- Placeholder for Feedback Content -->
+        </div>
+        <!-- NavigationMenuPopup -->
+        <div data-role="popup" id="feedbackMenuPopup" class="navigationMenuPopup" data-corners="true"
+            data-theme="none" data-shadow="false" data-tolerance="0,0">
+            <span class="MenuArrowTop"></span>
+            <ul data-role="listview" data-divider-theme="b" data-inset="true">
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
+                    class="menuIcon homeIcon"></span>Home </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
+                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
+                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
+                    class="menuIcon aedIcon"></span>AEDs </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
+                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
+                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
+                    class="menuIcon helpIcon"></span>Help </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
+                    class="menuIcon logoutIcon"></span>Logout </a></li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <!-- NavigationMenuPopup Div end here -->
+    </div>
+    <!-- HELP -->
+    <div data-role="page" id="pgHelp">
+        <div data-theme="d" data-role="header" data-position="fixed">
+            <h3>
+                Help
+            </h3>
+            <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
+                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#helpMenuPopup"
+                    data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
+        </div>
+        <!-- header div end here -->
+        <div data-role="content" id="divHelpContainer">
+            <!-- Placeholder for Feedback Content -->
+        </div>
+        <!-- NavigationMenuPopup -->
+        <div data-role="popup" id="helpMenuPopup" class="navigationMenuPopup" data-corners="true"
+            data-theme="none" data-shadow="false" data-tolerance="0,0">
+            <span class="MenuArrowTop"></span>
+            <ul data-role="listview" data-divider-theme="b" data-inset="true">
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
+                    class="menuIcon homeIcon"></span>Home </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
+                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
+                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
+                    class="menuIcon aedIcon"></span>AEDs </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
+                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
+                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
+                    class="menuIcon helpIcon"></span>Help </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
+                    class="menuIcon logoutIcon"></span>Logout </a></li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <!-- NavigationMenuPopup Div end here -->
+    </div>
+    <div data-role="page" id="pgMaintEdit">
+        <div data-theme="d" data-role="header" data-position="fixed">
+            <h3 id="maintenanceHeading">
+            </h3>
+            <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
+                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#maintenancePopupMenu"
+                    data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
+        </div>
+        <div data-role="content">
+            <div id="pLocation">
+            </div>
+            <p>
+                <span class='left'><strong>Name: </strong></span><span class='right' id="divCustomeName">
+                </span>
+            </p>
+            <div data-role="fieldcontain">
+                <fieldset data-role="controlgroup">
+                    <legend>AED Status:</legend>
+                    <input type="radio" name="radio-choice-1" id="radio-choice-1" value="choice-1" />
+                    <label for="radio-choice-1">
+                        AED Passed</label>
+                    <input type="radio" name="radio-choice-1" id="radio-choice-2" value="choice-2" />
+                    <label for="radio-choice-2">
+                        Need Service</label>
+                </fieldset>
+            </div>
+            <div data-role="fieldcontain" id="AEDComments" style="">
+                <label for="txtcomments">
+                </label>
+                <textarea cols="40" rows="8" name="txtcomments" id="txtcomments" placeholder="enter your comments"></textarea>
+            </div>
+            <fieldset class="ui-grid-a">
+                <div class="ui-block-a" style="width: 45%;">
+                    <a href="javascript:;" data-role="button" id="btnScan" data-theme="d"><span class="scanIconPlace">
+                        Scan</span></a>
+                </div>
+                <div class="ui-block-b orScan">
+                    <span class='orScanTxt'>( or )</span><br />
+                    <a href="#scanHelpPopup" data-rel="popup" id="HelpLinkTxt" data-theme="d" data-icon="help">
+                        <span>Help</span> </a>
+                </div>
+                <div class="ui-block-b" style="width: 45%;">
+                    <input type="button" name="chkScan" id="chkScan" class="custom chkScan" value='Input S/N' />
+                </div>
+            </fieldset>
+            <div class="ui-grid-solo">
+                <div id="divBarcodeText" style="display: none" class="ui-block-a">
+                    <input name="txtBarcodeText" id="txtBarcodeText" placeholder="enter the barcode" />
+                </div>
+            </div>
+            <fieldset class="ui-grid-a">
+                <div class="ui-block-a">
+                    <a href="javascript:;" id="btnSave" data-theme="d" data-role="button" data-icon="check">
+                        Save</a> <a href="#pgAM" data-theme="d" data-role="button" data-icon="delete" data-direction="reverse"
+                            data-rel="back">Cancel</a>
+                </div>
+                <div class="ui-block-b">
+                    <a href="javascript:;" id='btnSaveSN' data-theme="d" data-role="button" data-icon="check"
+                        class='saveBtnwoSerialNum'>Save without S/N</a>
+                </div>
+            </fieldset>
+            <div data-role="popup" id="scanHelpPopup" data-theme="e" data-position-to="window">
+                <h3>
+                    Barcode Scanner Help</h3>
+                <p>
+                    Barcode Scanner uses the camera on your phone to read AED Barcode.</p>
+                <p>
+                    Barcode Scanner continuously scans a square region shown on your screen -- just
+                    line up the phone so the barcode is completely inside the viewfinder rectangle:</p>
+                <p>
+                    <img src="images/androidbarcode.png" alt="How to scan?" /></p>
+            </div>
+        </div>
+        <!-- NavigationMenuPopup -->
+        <div data-role="popup" id="maintenancePopupMenu" class="navigationMenuPopup" data-corners="true"
+            data-theme="none" data-shadow="false" data-tolerance="0,0">
+            <span class="MenuArrowTop"></span>
+            <ul data-role="listview" data-divider-theme="b" data-inset="true">
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
+                    class="menuIcon homeIcon"></span>Home </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
+                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
+                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
+                    class="menuIcon aedIcon"></span>AEDs </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
+                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
+                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
+                    class="menuIcon helpIcon"></span>Help </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
+                    class="menuIcon logoutIcon"></span>Logout </a></li>
+            </ul>
+            <div class="clear">
+            </div>
+        </div>
+        <!-- NavigationMenuPopup Div end here -->
+    </div>
+    <div id="map_canvas" style="margin: 0.6em; display: none">
+    </div>
+    <input type="hidden" id="hiddenCurrentGeoAddress" />
+    <input type="hidden" id="hiddenLoginUserPhoneUDID" />
+    <input type="hidden" id="hiddenLoginUserPhoneVersion" />
+    <input type="hidden" id="hiddenLoginUserPhoneDeviceName" />
+    <script type="text/javascript">
+        $(function () {
+            $(document).bind('pagecreate', function (event) {
+
+                $(document).on("click", ".ui-btn-right", function () {
+                    var findPopupId = $(this).parents("[data-role='page']").find(".navigationMenuPopup");
+
+                    findPopupId.on({
+                        popupbeforeposition: function () {
+                            var h = $(window).height();
+                            findPopupId.css({ "height": h - 130 + "px", "top": "0px" });
+                        },
+                        popupafteropen: function () {
+                            var h = $(window).height();
+                            findPopupId.css({ "height": h - 130 + "px", "top": "0px" });
+                            findPopupId.parent().css({ "top": "45px" });
+                        }
+                    });
+                });
+            });
+
+            window.page = new AGS.Presenters.MainPage();
+            window.page.init();
+        });
+        $(document).on('pagebeforeshow', '#pgTermsCondition', function () {
+            $('#terms_conditions').css('height', ($(window).height() - 140) + "px");
+            $('.termsContent').css('height', ($(window).height() - 140) + "px");
+            $('#terms_conditions').css('width', $(window).width() + "px");
+        });
+    </script>
+</body>
+</html>

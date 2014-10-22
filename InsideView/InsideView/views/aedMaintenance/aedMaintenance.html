@@ -1,0 +1,50 @@
+﻿<div data-role="content">
+    {if data.AEDMaintenanceStatusList.length == 0}
+    <p class="modelTxt">
+        No AED Maintenance data found.
+    </p>
+    {else}
+    <div class="maintenancePlace">
+        <div class="mdetailsTxt">
+            For each AED on the list below, please scan the serial number barcode, and indicate the status of the device based on your inspection.<br />
+        </div>
+        <div class="ullist">
+            <ul data-role="listview" data-split-icon="gear" data-split-theme="d">
+                {for m in data.AEDMaintenanceStatusList}
+                <li class="mListLi MviewBtn" data-position-to="window" data-inline="true" data-transition="pop"
+                        data-serial="${m.AEDSerial}" data-passed="${m.IsChecked}" data-needservice="${m.NeedService}"
+                        data-comment="${m.Comment}" data-nextmaint="${new Date(data.Maintenance.MaintananceNextDate)|shortDateUS}"
+                        data-recid="${m.AEDRecordId}" data-custid="${m.CustomerId}" data-maintrecid="${m.MaintenanceRecordId}"
+                        data-aedlocation="${m.AEDLocation}" data-aedcustomename="${m.CustomAEDName}" data-id="${m.Id}">
+                
+                <a href="javascript:;"  >
+                     <img src="${m.AEDModelUrl}" alt="mm1"/>
+                    <h3 class="maintenanceHeading" style="color: {if (m.BatteryExpiryDate < new Date() &&  m.BatteryExpiryDate.clearTime() > new Date("01/01/2001")) || (m.AdultElectrodeExpiry < new Date() && m.AdultElectrodeExpiry.clearTime() > new Date("01/01/2001")) || (m.ChildElectrodeExpiry < new Date() && m.ChildElectrodeExpiry.clearTime() > new Date("01/01/2001"))}Red{/if}">
+                        ${m.AEDSerial}</h3>
+                        <p class="modelTxt">                        
+                         {if m.CustomAEDName!=null }        
+                        <p>Name: <span>${m.CustomAEDName}</span></p>
+                        {else}
+                        <p><span class="AedLocation">${m.AEDLocation}</span></p>
+                        {/if}
+                    </p>
+                    <p class="modelTxt">
+                        Model: ${m.AEDModel}
+                    </p>
+                    <p>
+                        Battery expiry:{if m.BatteryExpiryDate.clearTime() <= new Date("01/01/2001")} NA {else} <span style="color: {if m.BatteryExpiryDate < new Date()}red{/if}">${m.BatteryExpiryDate|shortDateUSWithOutDaySuffix}</span>{/if}<br />
+                        Adult Pad expiry:{if m.AdultElectrodeExpiry.clearTime() <= new Date("01/01/2001")} NA {else}<span style="color: {if m.AdultElectrodeExpiry < new Date()}red{/if}">${m.AdultElectrodeExpiry|shortDateUSWithOutDaySuffix}</span>{/if}<br />
+                        Child Pad expiry:{if m.ChildElectrodeExpiry.clearTime() <= new Date("01/01/2001")} NA {else}<span style="color: {if m.ChildElectrodeExpiry < new Date()}red{/if}">${m.ChildElectrodeExpiry|shortDateUSWithOutDaySuffix}</span>{/if}<br />
+                        Inspection: {if m.IsChecked}<span class="green">Completed </span>{elseif new Date(data.Maintenance.MaintananceNextDate)
+                        < new Date()} <span style="color: red">Past Due</span>{else} <span style="color: red">Not Completed</span> {/if}
+                    </p>
+                </a>
+                    <a href="javascript:;" class="MviewBtnBg">maintenance</a>
+                </li>
+                {/for}
+            </ul>
+        </div>
+    </div>
+</div>
+{/if}
+<!--maintenancePlace div end here -->
