@@ -60,6 +60,7 @@
         }
         document.addEventListener("deviceready", function () { onDeviceReady(); }, false);
 
+
         function onBackKeyDown() {
             if ($.mobile.activePage.attr('id') == 'pgHome' || $.mobile.activePage.attr('id') == 'pgLogin') {
                 navigator.app.exitApp();
