@@ -39,7 +39,7 @@ AGS.Model.Service.prototype = {
         return localStorage.getItem("customerData");
     },
     setToken: function (data) {
-        localStorage.setItem("customerData", data);
+        localStorage.setItem("customerData", JSON.stringify(data));
     },
     signOut: function () {
        localStorage.removeItem("customerData");
