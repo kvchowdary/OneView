@@ -14,24 +14,11 @@ AGS.Presenters.MainPage.prototype = {
         this.initViews();
         this.afterInit();
     },
-    checkEmail: function (inputvalue) {
-        var pattern = /^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])+([a-zA-Z])+/gi;
-        var num_pattern = /^\d+$/gi;
-        if (pattern.test(inputvalue)) { return true; }
-        else if (num_pattern.test(inputvalue)) { return true; }
-        else {
-            alert("Please enter valid email address", null, "Login failed", "OK");
-            return false;
-        }
-    },
     initPage: function () {
         var _this = this;
         $("#btnLogin").click(function () {
             var username = $("#txtUserName").val();
             var password = $("#txtPassword").val();
-            var loginUserPhoneUDID = $('#hiddenLoginUserPhoneUDID').val();
-            var loginUserPhoneVersion = $('#hiddenLoginUserPhoneVersion').val();
-            var loginUserPhoneDeviceName = $('#hiddenLoginUserPhoneDeviceName').val();
             if (_this.validate(username, password)) {
                 $.mobile.loading('show', {
                     text: 'Signing In',
@@ -39,7 +26,7 @@ AGS.Presenters.MainPage.prototype = {
                     theme: 'a',
                     html: ""
                 });
-                _this.Model.signIn(username, password, loginUserPhoneUDID, loginUserPhoneVersion, loginUserPhoneDeviceName);
+                _this.Model.signIn(username, password);
             }
         });
         //Tab and Home page events
@@ -165,34 +152,17 @@ AGS.Presenters.MainPage.prototype = {
         eventHandlers.onTermsSaved = function (data) { _this.onTermsSaved(data); };
     },
     afterInit: function () {
-        var username = localStorage.getItem("username");
-        var password = localStorage.getItem("password");
-        if (username != null && password != null) {
-            var customerData = JSON.parse(localStorage.getItem("customerData"));
-            if (customerData != null) {
-                customerData.HasAcceptedTncMobile == false ? this.setTermAndConditionsData(customerData) : this.setHomePageData(customerData)
-            }
+        var customerData = JSON.parse(localStorage.getItem("customerData"));
+        if (customerData != null) {
+            this.setHomePageData(customerData);
         }
     },
     onLogin: function (data) {
-        localStorage.setItem("customerData", JSON.stringify(data));
-        var customerData = JSON.parse(localStorage.getItem("customerData"));
-        if (customerData != null) {
-            customerData.HasAcceptedTncMobile == false ? this.setTermAndConditionsData(customerData) : this.setHomePageData(customerData)
-        }
+        this.setHomePageData(data);
     },
-    setTermAndConditionsData: function (customerData) {
-        $.mobile.changePage("#pgTermsCondition");
-        $("#pgTermsCondition").trigger('create');
-    },
-    setHomePageData: function (customerData) {
-        var name = "";
-        if (customerData.FirstName != null && typeof (customerData.FirstName) != "undefined")
-            name = customerData.FirstName;
-        if (customerData.LastName != null && typeof (customerData.LastName) != "undefined")
-            name = name + " " + customerData.LastName;
-        $('.welcomeTxt').find('label').text(name);
-        $('.customerTitle').text(customerData.UserCustomer.Name);
+    
+    setHomePageData: function (data) {
+        $('.welcomeTxt').find('label').text(data.username);
         $.mobile.changePage("#pgHome");
     },
     onLogoutClicked: function () {

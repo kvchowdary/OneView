@@ -15,49 +15,40 @@
     };
 
     this.settings = $.extend(defaultSettings, options);
-    var _this = this;
     AGS.Model.Common.registerErrorCallBack(this.settings.eventHandlers.onServerRequestError);
 };
 
 AGS.Model.Service.prototype = {
-    signIn: function (userName, password, loginUserPhoneUDID, loginUserPhoneVersion, loginUserPhoneDeviceName) {
-        //http://insideview.allianceglobalservices.com/alfresco/service/index/all
-        //http://insideview.allianceglobalservices.com/alfresco/service/api/login?u={username}&pw={password?}
-        this.setToken(userName, password);
+    signIn: function (userName, password) {
         var _this = this;
-        this.ApiRead("login?u=" + userName + "&pw=" + password, function (data) {
-            if (_this.settings.eventHandlers.onLogin) _this.settings.eventHandlers.onLogin(data);
+        this.ApiCreate("login", function (response) {
+            if (_this.settings.eventHandlers.onLogin) {
+                var data = {};
+                data.username = userName;
+                data.password = password;
+                data.ticket = response.data.ticket;
+                _this.setToken(data);
+                _this.settings.eventHandlers.onLogin(data);
+            }
         }, function (data, error) {
             if (_this.settings.eventHandlers.onLoginError)
                 _this.settings.eventHandlers.onLoginError(data, error);
-        }, null, null);
-    },
-    onSuccessfullySignedIn: function (data) {
-        localStorage.setItem("customerData", data);
+        }, null, { "username" : userName , "password" : password });
     },
     getCustomerData: function () {
         return localStorage.getItem("customerData");
     },
-    setToken: function (username, password) {
-        localStorage.setItem("username", username);
-        localStorage.setItem("password", password);
+    setToken: function (data) {
+        localStorage.setItem("customerData", data);
     },
     signOut: function () {
-        localStorage.removeItem("username");
-        localStorage.removeItem("password");
-        localStorage.removeItem("customerData");
+       localStorage.removeItem("customerData");
     },
     getActiveAEDs: function (customerId) {
         var _this = this;
         this.ApiRead("AED/List?customerId=" + customerId, function (data) {
             if (_this.settings.eventHandlers.onAEDsReceived) _this.settings.eventHandlers.onAEDsReceived(data);
         }, null, null, null);
-    },
-    acceptedTermsConditions: function (CustomerData) {
-        var _this = this;
-        this.ApiCreate("Terms/TermsConditions", function (data) {
-            if (_this.settings.eventHandlers.onTermsSaved) _this.settings.eventHandlers.onTermsSaved(data);
-        }, null, null, { requestBody: CustomerData });
     },
     getActiveTrainedResponders: function (customerId) {
         var _this = this;

@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="Content/jquery.mobile.theme-1.4.2.min.css" />
     <link rel="stylesheet" href="css/mm.css" />
     <script type="text/javascript" src="scripts/jquery-1.8.0.min.js"></script>
-   
+    <script type="text/javascript" src="scripts/jqueryrest.js"></script>
+    <script type="text/javascript" src="scripts/json2.js"></script>
     <script src="scripts/templateManager/trimpathTemplate.js" type="text/javascript"></script>
     <script src="scripts/templateManager/templateManager.js" type="text/javascript"></script>
     <script src="scripts/nameSpaces.js" type="text/javascript"></script>
@@ -55,13 +56,10 @@
             document.addEventListener("online", onOnline, false);
             document.addEventListener("resume", onResume, false);
             document.addEventListener("pause", onPause, false);
-            GetDeviceInformation();
+            //GetDeviceInformation();
 
         }
         document.addEventListener("deviceready", function () { onDeviceReady(); }, false);
-
-
-
         function onBackKeyDown() {
             if ($.mobile.activePage.attr('id') == 'pgHome' || $.mobile.activePage.attr('id') == 'pgLogin') {
                 navigator.app.exitApp();
@@ -181,12 +179,12 @@
                 <ul data-role="listview" data-divider-theme="d" data-inset="true">
                     <li data-theme="d"><a href="javascript:;" class="btnMessageCenter" id="btnMessageCenter">
                         <span class="menuIcon messageIcon"></span>Message Center </a></li>
-                    <li data-theme="d"><a href="javascript:;" class="btnTrainedResponders" id="btnTrainedResponders">
-                        <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
-                    <li data-theme="d"><a href="javascript:;" class="btnAEDs" id="btnAEDs"><span class="menuIcon aedIcon">
-                    </span>AEDs </a></li>
-                    <li data-theme="d"><a href="javascript:;" class="btnMaintenance" id="btnMaintenance">
-                        <span class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
+                    <li data-theme="d"><a href="javascript:;" class="btnReadNYellow" id="btnReadNYellow">
+                        <span class="menuIcon trainedIcon"></span>Red & Yellow </a></li>
+                    <li data-theme="d"><a href="javascript:;" class="btnPortfolioProjects" id="btnPortfolioProjects"><span class="menuIcon aedIcon">
+                    </span>Portfolio Projects </a></li>
+                    <li data-theme="d"><a href="javascript:;" class="btnAssociatedProjects" id="btnAssociatedProjects">
+                        <span class="menuIcon maintenanceIcon"></span>Assoicated Prjoects </a></li>
                     <li data-theme="d"><a href="javascript:;" class="btnFeedback" id="btnFeedback"><span
                         class="menuIcon feedbackIcon"></span>Feedback </a></li>
                     <li data-theme="d"><a href="javascript:;" class="btnHelp" id="btnHelp"><span class="menuIcon helpIcon">
@@ -229,11 +227,11 @@
                     class="menuIcon homeIcon"></span>Home </a></li>
                 <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
                     class="menuIcon messageIcon"></span>Message Center </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
-                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnReadNYellow">
+                    <span class="menuIcon trainedIcon"></span>Red & Yellow </a></li>
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnPortfolioProjects"><span
                     class="menuIcon aedIcon"></span>AEDs </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
+                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAssociatedProjects"><span
                     class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
                 <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
                     class="menuIcon feedbackIcon"></span>Feedback </a></li>
@@ -247,124 +245,196 @@
         </div>
         <!-- NavigationMenuPopup Div end here -->
     </div>
-    <!-- Trained Responders -->
-    <div data-role="page" id="pgTR" class="trainedResponderArea">
+    <!-- Red & Yellow -->
+    <div data-role="page" id="pgRY" class="redAndYellowArea">
         <div data-theme="d" data-role="header" data-position="fixed">
             <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
-                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#trainedMenuPopup"
+                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#ryMenuPopup"
                     data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
             <h3>
-                Trained Responders
+                Red & Yellow
             </h3>
         </div>
         <!-- header div end here -->
         <div data-role="content">
-            <div id="divTRListContainer">
-                <!-- Trained Responders Placeholder -->
+            <div id="divRYListContainer">
+                <!-- Red and Yellow Placeholder -->
             </div>
         </div>
         <!-- NavigationMenuPopup -->
-        <div data-role="popup" id="trainedMenuPopup" class="navigationMenuPopup" data-corners="true"
-            data-theme="none" data-shadow="false" data-tolerance="0,0">
+        <div data-role="popup" id="ryMenuPopup" class="navigationMenuPopup" data-corners="true"
+             data-theme="none" data-shadow="false" data-tolerance="0,0">
             <span class="MenuArrowTop"></span>
             <ul data-role="listview" data-divider-theme="b" data-inset="true">
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
-                    class="menuIcon homeIcon"></span>Home </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
-                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
-                    class="menuIcon trainedIcon"></span>Trained Responders </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
-                    class="menuIcon aedIcon"></span>AEDs </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
-                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
-                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
-                    class="menuIcon helpIcon"></span>Help </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
-                    class="menuIcon logoutIcon"></span>Logout </a></li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="lnkHomeIcon">
+                        <span class="menuIcon homeIcon"></span>Home
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnMessageCenter">
+                        <span class="menuIcon messageIcon"></span>Message Center
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="ui-btn-active">
+                        <span class="menuIcon trainedIcon"></span>Red & Yellow
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnAEDs">
+                        <span class="menuIcon aedIcon"></span>Portfolio Projects
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnMaintenance">
+                        <span class="menuIcon maintenanceIcon"></span>Associated Projects
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnFeedback">
+                        <span class="menuIcon feedbackIcon"></span>Feedback
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnHelp">
+                        <span class="menuIcon helpIcon"></span>Help
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnLogout">
+                        <span class="menuIcon logoutIcon"></span>Logout
+                    </a>
+                </li>
             </ul>
             <div class="clear">
             </div>
         </div>
         <!-- NavigationMenuPopup Div end here -->
     </div>
-    <!-- Active AEDs -->
+    <!-- Portfolio Projects -->
     <div data-role="page" id="pgAED">
         <div data-theme="d" data-role="header" data-position="fixed">
             <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
-                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#aedMenuPopup"
+                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#ppMenuPopup"
                     data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
             <h3>
-                AEDs
+                Portfolio Projects
             </h3>
         </div>
         <!-- header div end here -->
-        <div data-role="content" id="divAEDListingContainer">
-            <!-- Placeholder for AED Listing Content -->
+        <div data-role="content" id="divPPListingContainer">
+            <!-- Placeholder Content -->
         </div>
         <!-- NavigationMenuPopup -->
-        <div data-role="popup" id="aedMenuPopup" class="navigationMenuPopup" data-corners="true"
+        <div data-role="popup" id="ppMenuPopup" class="navigationMenuPopup" data-corners="true"
             data-theme="none" data-shadow="false" data-tolerance="0,0">
             <span class="MenuArrowTop"></span>
             <ul data-role="listview" data-divider-theme="b" data-inset="true">
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
-                    class="menuIcon homeIcon"></span>Home </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
-                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
-                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
-                    class="menuIcon aedIcon"></span>AEDs </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
-                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
-                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
-                    class="menuIcon helpIcon"></span>Help </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
-                    class="menuIcon logoutIcon"></span>Logout </a></li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="lnkHomeIcon">
+                        <span class="menuIcon homeIcon"></span>Home
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="ui-btn-active">
+                        <span class="menuIcon messageIcon"></span>Message Center
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnReadNYellow">
+                        <span class="menuIcon trainedIcon"></span>Red & Yellow
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnPortfolioProjects">
+                        <span class="menuIcon aedIcon"></span>Portfolio Projects
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnAssociatedProjects">
+                        <span class="menuIcon maintenanceIcon"></span>Associated Projects
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnFeedback">
+                        <span class="menuIcon feedbackIcon"></span>Feedback
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnHelp">
+                        <span class="menuIcon helpIcon"></span>Help
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnLogout">
+                        <span class="menuIcon logoutIcon"></span>Logout
+                    </a>
+                </li>
             </ul>
             <div class="clear">
             </div>
         </div>
         <!-- NavigationMenuPopup Div end here -->
     </div>
-    <!-- AED Maintenance -->
-    <div data-role="page" id="pgAM">
+    <!-- Associated Projects -->
+    <div data-role="page" id="pgAP">
         <div data-theme="d" data-role="header" data-position="fixed">
             <h3>
-                AED Maintenance
+                Associated Projects
             </h3>
             <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
-                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#maintenanceMenuPopup"
+                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#apMenuPopup"
                     data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
         </div>
         <!-- header div end here -->
-        <div id="divAEDMaintenanceContainer">
+        <div id="divAssociatedProjectsContainer">
         </div>
         <!-- NavigationMenuPopup -->
-        <div data-role="popup" id="maintenanceMenuPopup" class="navigationMenuPopup" data-corners="true"
-            data-theme="none" data-shadow="false" data-tolerance="0,0">
+        <div data-role="popup" id="apMenuPopup" class="navigationMenuPopup" data-corners="true"
+             data-theme="none" data-shadow="false" data-tolerance="0,0">
             <span class="MenuArrowTop"></span>
             <ul data-role="listview" data-divider-theme="b" data-inset="true">
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
-                    class="menuIcon homeIcon"></span>Home </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
-                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
-                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
-                    class="menuIcon aedIcon"></span>AEDs </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
-                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
-                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
-                    class="menuIcon helpIcon"></span>Help </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
-                    class="menuIcon logoutIcon"></span>Logout </a></li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="lnkHomeIcon">
+                        <span class="menuIcon homeIcon"></span>Home
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="ui-btn-active">
+                        <span class="menuIcon messageIcon"></span>Message Center
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnReadNYellow">
+                        <span class="menuIcon trainedIcon"></span>Red & Yellow
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnPortfolioProjects">
+                        <span class="menuIcon aedIcon"></span>Portfolio Projects
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnAssociatedProjects">
+                        <span class="menuIcon maintenanceIcon"></span>Associated Projects
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnFeedback">
+                        <span class="menuIcon feedbackIcon"></span>Feedback
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnHelp">
+                        <span class="menuIcon helpIcon"></span>Help
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnLogout">
+                        <span class="menuIcon logoutIcon"></span>Logout
+                    </a>
+                </li>
             </ul>
             <div class="clear">
             </div>
@@ -390,22 +460,46 @@
             data-theme="none" data-shadow="false" data-tolerance="0,0">
             <span class="MenuArrowTop"></span>
             <ul data-role="listview" data-divider-theme="b" data-inset="true">
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
-                    class="menuIcon homeIcon"></span>Home </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
-                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
-                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
-                    class="menuIcon aedIcon"></span>AEDs </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
-                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
-                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
-                    class="menuIcon helpIcon"></span>Help </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
-                    class="menuIcon logoutIcon"></span>Logout </a></li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="lnkHomeIcon">
+                        <span class="menuIcon homeIcon"></span>Home
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="ui-btn-active">
+                        <span class="menuIcon messageIcon"></span>Message Center
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnReadNYellow">
+                        <span class="menuIcon trainedIcon"></span>Red & Yellow
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnPortfolioProjects">
+                        <span class="menuIcon aedIcon"></span>Portfolio Projects
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnAssociatedProjects">
+                        <span class="menuIcon maintenanceIcon"></span>Associated Projects
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnFeedback">
+                        <span class="menuIcon feedbackIcon"></span>Feedback
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnHelp">
+                        <span class="menuIcon helpIcon"></span>Help
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnLogout">
+                        <span class="menuIcon logoutIcon"></span>Logout
+                    </a>
+                </li>
             </ul>
             <div class="clear">
             </div>
@@ -419,8 +513,8 @@
                 Help
             </h3>
             <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
-                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#helpMenuPopup"
-                    data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
+               data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#helpMenuPopup"
+                                                                data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
         </div>
         <!-- header div end here -->
         <div data-role="content" id="divHelpContainer">
@@ -428,131 +522,56 @@
         </div>
         <!-- NavigationMenuPopup -->
         <div data-role="popup" id="helpMenuPopup" class="navigationMenuPopup" data-corners="true"
-            data-theme="none" data-shadow="false" data-tolerance="0,0">
+             data-theme="none" data-shadow="false" data-tolerance="0,0">
             <span class="MenuArrowTop"></span>
             <ul data-role="listview" data-divider-theme="b" data-inset="true">
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
-                    class="menuIcon homeIcon"></span>Home </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
-                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
-                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
-                    class="menuIcon aedIcon"></span>AEDs </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
-                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
-                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="ui-btn-active"><span
-                    class="menuIcon helpIcon"></span>Help </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
-                    class="menuIcon logoutIcon"></span>Logout </a></li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="lnkHomeIcon">
+                        <span class="menuIcon homeIcon"></span>Home
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="ui-btn-active">
+                        <span class="menuIcon messageIcon"></span>Message Center
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnReadNYellow">
+                        <span class="menuIcon trainedIcon"></span>Red & Yellow
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnPortfolioProjects">
+                        <span class="menuIcon aedIcon"></span>Portfolio Projects
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnAssociatedProjects">
+                        <span class="menuIcon maintenanceIcon"></span>Associated Projects
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnFeedback">
+                        <span class="menuIcon feedbackIcon"></span>Feedback
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnHelp">
+                        <span class="menuIcon helpIcon"></span>Help
+                    </a>
+                </li>
+                <li data-theme="d" data-icon="false">
+                    <a href="javascript:;" class="btnLogout">
+                        <span class="menuIcon logoutIcon"></span>Logout
+                    </a>
+                </li>
             </ul>
             <div class="clear">
             </div>
         </div>
         <!-- NavigationMenuPopup Div end here -->
     </div>
-    <div data-role="page" id="pgMaintEdit">
-        <div data-theme="d" data-role="header" data-position="fixed">
-            <h3 id="maintenanceHeading">
-            </h3>
-            <a data-role="button" data-inline="true" data-direction="reverse" data-rel="back"
-                data-icon="back" data-iconpos="left">Back </a><a data-role="button" href="#maintenancePopupMenu"
-                    data-rel="popup" data-position-to="window" data-icon="gear">Menu </a>
-        </div>
-        <div data-role="content">
-            <div id="pLocation">
-            </div>
-            <p>
-                <span class='left'><strong>Name: </strong></span><span class='right' id="divCustomeName">
-                </span>
-            </p>
-            <div data-role="fieldcontain">
-                <fieldset data-role="controlgroup">
-                    <legend>AED Status:</legend>
-                    <input type="radio" name="radio-choice-1" id="radio-choice-1" value="choice-1" />
-                    <label for="radio-choice-1">
-                        AED Passed</label>
-                    <input type="radio" name="radio-choice-1" id="radio-choice-2" value="choice-2" />
-                    <label for="radio-choice-2">
-                        Need Service</label>
-                </fieldset>
-            </div>
-            <div data-role="fieldcontain" id="AEDComments" style="">
-                <label for="txtcomments">
-                </label>
-                <textarea cols="40" rows="8" name="txtcomments" id="txtcomments" placeholder="enter your comments"></textarea>
-            </div>
-            <fieldset class="ui-grid-a">
-                <div class="ui-block-a" style="width: 45%;">
-                    <a href="javascript:;" data-role="button" id="btnScan" data-theme="d"><span class="scanIconPlace">
-                        Scan</span></a>
-                </div>
-                <div class="ui-block-b orScan">
-                    <span class='orScanTxt'>( or )</span><br />
-                    <a href="#scanHelpPopup" data-rel="popup" id="HelpLinkTxt" data-theme="d" data-icon="help">
-                        <span>Help</span> </a>
-                </div>
-                <div class="ui-block-b" style="width: 45%;">
-                    <input type="button" name="chkScan" id="chkScan" class="custom chkScan" value='Input S/N' />
-                </div>
-            </fieldset>
-            <div class="ui-grid-solo">
-                <div id="divBarcodeText" style="display: none" class="ui-block-a">
-                    <input name="txtBarcodeText" id="txtBarcodeText" placeholder="enter the barcode" />
-                </div>
-            </div>
-            <fieldset class="ui-grid-a">
-                <div class="ui-block-a">
-                    <a href="javascript:;" id="btnSave" data-theme="d" data-role="button" data-icon="check">
-                        Save</a> <a href="#pgAM" data-theme="d" data-role="button" data-icon="delete" data-direction="reverse"
-                            data-rel="back">Cancel</a>
-                </div>
-                <div class="ui-block-b">
-                    <a href="javascript:;" id='btnSaveSN' data-theme="d" data-role="button" data-icon="check"
-                        class='saveBtnwoSerialNum'>Save without S/N</a>
-                </div>
-            </fieldset>
-            <div data-role="popup" id="scanHelpPopup" data-theme="e" data-position-to="window">
-                <h3>
-                    Barcode Scanner Help</h3>
-                <p>
-                    Barcode Scanner uses the camera on your phone to read AED Barcode.</p>
-                <p>
-                    Barcode Scanner continuously scans a square region shown on your screen -- just
-                    line up the phone so the barcode is completely inside the viewfinder rectangle:</p>
-                <p>
-                    <img src="images/androidbarcode.png" alt="How to scan?" /></p>
-            </div>
-        </div>
-        <!-- NavigationMenuPopup -->
-        <div data-role="popup" id="maintenancePopupMenu" class="navigationMenuPopup" data-corners="true"
-            data-theme="none" data-shadow="false" data-tolerance="0,0">
-            <span class="MenuArrowTop"></span>
-            <ul data-role="listview" data-divider-theme="b" data-inset="true">
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="lnkHomeIcon"><span
-                    class="menuIcon homeIcon"></span>Home </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMessageCenter">
-                    <span class="menuIcon messageIcon"></span>Message Center </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnTrainedResponders">
-                    <span class="menuIcon trainedIcon"></span>Trained Responders </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnAEDs"><span
-                    class="menuIcon aedIcon"></span>AEDs </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnMaintenance"><span
-                    class="menuIcon maintenanceIcon"></span>AED Maintenance </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnFeedback"><span
-                    class="menuIcon feedbackIcon"></span>Feedback </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnHelp"><span
-                    class="menuIcon helpIcon"></span>Help </a></li>
-                <li data-theme="d" data-icon="false"><a href="javascript:;" class="btnLogout"><span
-                    class="menuIcon logoutIcon"></span>Logout </a></li>
-            </ul>
-            <div class="clear">
-            </div>
-        </div>
-        <!-- NavigationMenuPopup Div end here -->
-    </div>
+
     <div id="map_canvas" style="margin: 0.6em; display: none">
     </div>
     <input type="hidden" id="hiddenCurrentGeoAddress" />
@@ -583,11 +602,11 @@
             window.page = new AGS.Presenters.MainPage();
             window.page.init();
         });
-        $(document).on('pagebeforeshow', '#pgTermsCondition', function () {
-            $('#terms_conditions').css('height', ($(window).height() - 140) + "px");
-            $('.termsContent').css('height', ($(window).height() - 140) + "px");
-            $('#terms_conditions').css('width', $(window).width() + "px");
-        });
+        //$(document).on('pagebeforeshow', '#pgTermsCondition', function () {
+        //    $('#terms_conditions').css('height', ($(window).height() - 140) + "px");
+        //    $('.termsContent').css('height', ($(window).height() - 140) + "px");
+        //    $('#terms_conditions').css('width', $(window).width() + "px");
+        //});
     </script>
 </body>
 </html>
